@@ -22,7 +22,7 @@ from app.users.domain.ports.password_hasher import PasswordHasher
 from app.users.domain.value_objects.email import Email
 from app.users.domain.value_objects.full_name import FullName
 from app.users.domain.value_objects.password import Password
-
+from app.shared.application.ports.unit_of_work import UnitOfWork
 
 class RegisterUserUseCase:
     """
@@ -33,6 +33,7 @@ class RegisterUserUseCase:
         self,
         repository: UserRepository,
         password_hasher: PasswordHasher,
+        unit_of_work: UnitOfWork,
     ) -> None:
         """
         Initialize the use case.
@@ -46,11 +47,12 @@ class RegisterUserUseCase:
         """
         self._repository = repository
         self._password_hasher = password_hasher
+        self._unit_of_work = unit_of_work
 
     async def execute(
         self,
         command: RegisterUserCommand,
-    ) -> User:
+    ) -> RegisterUserResult:
         """
         Register a new user.
 
@@ -78,7 +80,7 @@ class RegisterUserUseCase:
             )
 
         # Hash the validated password.
-        password_hash = await self._password_hasher.hash(
+        password_hash = self._password_hasher.hash(
             password.value
         )
 
@@ -89,7 +91,13 @@ class RegisterUserUseCase:
             password_hash=password_hash,
         )
 
-        # Persist the aggregate.
-        await self._repository.save(user)
+        try:
+
+            # Persist the aggregate.
+            await self._repository.save(user)
+            await self._unit_of_work.commit()
+        except:
+            await self._unit_of_work.rollback()
+            raise
 
         return UserMapper.to_register_result(user)

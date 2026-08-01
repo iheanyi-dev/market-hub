@@ -12,6 +12,9 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
+# Import models so SQLAlchemy registers them
+from app.shared.database.models.user_model import UserModel
+
 from app.shared.config.settings import settings
 from app.shared.database.base import Base
 

@@ -8,7 +8,7 @@ from app.users.domain.entities.user import User
 from app.users.domain.value_objects.email import Email
 from app.users.domain.value_objects.full_name import FullName
 from app.users.domain.value_objects.user_id import UserId
-from app.users.infrastructure.database.models.user_model import UserModel
+from app.shared.database.models.user_model import UserModel
 
 
 class UserPersistenceMapper:

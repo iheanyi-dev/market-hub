@@ -6,7 +6,7 @@ This module defines the data returned after a successful user registration.
 
 from dataclasses import dataclass
 from datetime import datetime
-
+from uuid import UUID
 
 @dataclass(frozen=True, slots=True)
 class RegisterUserResult:
@@ -36,7 +36,7 @@ class RegisterUserResult:
             When the account was last modified.
     """
 
-    id: str
+    id: UUID
     full_name: str
     email: str
     role: str
