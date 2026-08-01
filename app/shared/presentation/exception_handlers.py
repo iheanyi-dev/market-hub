@@ -8,7 +8,10 @@ from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 
 from app.users.application.exceptions.email_already_exists_error import (
-    EmailAlreadyExistsError,
+    EmailAlreadyExistsError
+)
+from app.users.application.exceptions.invalid_credentials_exception import (
+    InvalidCredentialsException
 )
 
 
@@ -30,5 +33,24 @@ def register_exception_handlers(app: FastAPI) -> None:
             content={
                 "message": str(exc),
                 "timestamp": datetime.now(UTC).isoformat(),
+            },
+        )
+
+    @app.exception_handler(InvalidCredentialsException)
+    async def invalid_credentials_exception_handler(
+        request: Request,
+        exc: InvalidCredentialsException,
+    ) -> JSONResponse:
+        """
+        Handle authentication failures.
+
+        Returns:
+            HTTP 401 Unauthorized.
+        """
+
+        return JSONResponse(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            content={
+                "detail": str(exc),
             },
         )

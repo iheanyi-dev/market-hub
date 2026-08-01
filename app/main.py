@@ -9,6 +9,10 @@ from app.users.presentation.controllers.users_controller import (
     router as users_router,
 )
 
+from app.users.presentation.controllers.auth_controller import (
+    router as auth_router,
+)
+
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
@@ -20,6 +24,11 @@ register_exception_handlers(app)
 app.include_router(
     users_router,
     prefix="/api/v1",
+)
+
+app.include_router(
+    auth_router,
+    prefix="/api/v1"
 )
 
 @app.get("/")
