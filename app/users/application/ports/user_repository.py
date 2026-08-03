@@ -13,7 +13,7 @@ from abc import ABC, abstractmethod
 
 from app.users.domain.entities.user import User
 from app.users.domain.value_objects.email import Email
-
+from uuid import UUID
 
 class UserRepository(ABC):
     """
@@ -53,6 +53,20 @@ class UserRepository(ABC):
         Args:
             email:
                 The user's email.
+
+        Returns:
+            A User if found; otherwise None.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    async def get_by_id(self, id: UUID) -> User | None:
+        """
+        Retrieve a user by id.
+
+        Args:
+            id:
+                The user's id.
 
         Returns:
             A User if found; otherwise None.

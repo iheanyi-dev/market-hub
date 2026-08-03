@@ -1,16 +1,17 @@
 """
-Contract for generating and validating authentication tokens.
+Application contract for authentication token management.
 
-The application layer depends on this abstraction and is independent
-of the underlying token implementation (e.g. JWT).
+The application layer depends only on this abstraction and remains
+independent of the JWT implementation.
 """
 
 from abc import ABC, abstractmethod
+from datetime import datetime
 
 
 class TokenGenerator(ABC):
     """
-    Defines the operations required for token management.
+    Defines the operations required for authentication token management.
     """
 
     @abstractmethod
@@ -19,13 +20,7 @@ class TokenGenerator(ABC):
         subject: str,
     ) -> str:
         """
-        Generate an access token.
-
-        Args:
-            subject: Unique identifier of the authenticated user.
-
-        Returns:
-            Encoded access token.
+        Generate a signed JWT access token.
         """
         raise NotImplementedError
 
@@ -36,15 +31,31 @@ class TokenGenerator(ABC):
     ) -> dict:
         """
         Decode and validate an access token.
+        """
+        raise NotImplementedError
 
-        Args:
-            token: Encoded JWT.
+    @abstractmethod
+    def generate_refresh_token(
+        self,
+        subject: str,
+    ) -> tuple[str, datetime]:
+        """
+        Generate a refresh token.
 
         Returns:
-            Decoded token payload.
+            A tuple containing:
 
-        Raises:
-            Exception:
-                If the token is invalid or expired.
+            - The encoded refresh token.
+            - The expiration timestamp.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def decode_refresh_token(
+        self,
+        token: str,
+    ) -> dict:
+        """
+        Decode and validate a refresh token.
         """
         raise NotImplementedError

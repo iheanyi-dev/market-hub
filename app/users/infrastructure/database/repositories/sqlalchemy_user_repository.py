@@ -12,6 +12,7 @@ from app.users.infrastructure.database.mappers.user_persistence_mapper import (
     UserPersistenceMapper,
 )
 from app.shared.database.models.user_model import UserModel
+from uuid import UUID
 
 class SqlAlchemyUserRepository(UserRepository):
     """
@@ -80,4 +81,21 @@ class SqlAlchemyUserRepository(UserRepository):
         if model is None:
             return None
 
+        return UserPersistenceMapper.to_domain(model)
+
+    async def get_by_id(self, id: UUID) -> User | None:
+        """
+            Retrieve a user by email.
+        """
+        statement = (
+            select(UserModel)
+            .where(UserModel.id == id)
+        )
+
+        result = await self._session.execute(statement)
+
+        model = result.scalar_one_or_none()
+
+        if model is None:
+            return None
         return UserPersistenceMapper.to_domain(model)

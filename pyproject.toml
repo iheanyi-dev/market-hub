@@ -35,3 +35,8 @@ dev = [
     "pytest-asyncio>=1.4.0",
     "ruff>=0.16.1",
 ]
+
+[tool.uv.workspace]
+members = [
+    "e-market-hub",
+]

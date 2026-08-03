@@ -21,7 +21,7 @@ router = APIRouter(
 
 @router.post(
     "/register",
-    response_model=RegisterUserResponse,
+    response_model=RegisterUserResult,
     status_code=status.HTTP_201_CREATED,
 )
 async def register_user(
@@ -42,12 +42,4 @@ async def register_user(
 
     result = await use_case.execute(command)
 
-    return RegisterUserResponse(
-        id=result.id,
-        full_name=result.full_name,
-        email=result.email,
-        role=result.role,
-        status=result.status,
-        created_at=result.created_at,
-        updated_at=result.updated_at,
-    )
+    return result

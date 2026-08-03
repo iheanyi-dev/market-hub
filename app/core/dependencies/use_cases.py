@@ -26,8 +26,17 @@ from app.core.dependencies.unit_of_work import (
 from app.shared.infrastructure.database.sqlalchemy_unit_of_work import (
     SqlAlchemyUnitOfWork,
 )
-from app.shared.application.ports.unit_of_work import UnitOfWork
 
+from app.auth.infrastructure.dependencies import (
+    get_refresh_token_hasher, get_refresh_token_repository
+)
+from app.shared.application.ports.unit_of_work import UnitOfWork
+from app.auth.application.ports.refresh_token_hasher import (
+    RefreshTokenHasher
+)
+from app.auth.application.ports.refresh_token_repository import (
+    RefreshTokenRepository
+)
 from app.core.dependencies.security import get_token_generator
 # from app.core.dependencies.shared import (
 #     get_password_hasher,
@@ -72,6 +81,12 @@ def get_login_user_use_case(
     password_hasher: PasswordHasher = Depends(get_password_hasher),
     token_generator: TokenGenerator = Depends(get_token_generator),
     unit_of_work: UnitOfWork = Depends(get_unit_of_work),
+    refresh_token_repository: RefreshTokenRepository = Depends(
+        get_refresh_token_repository
+    ),
+    refresh_token_hasher: RefreshTokenHasher = Depends(
+        get_refresh_token_hasher
+    )
 ) -> LoginUserUseCase:
     """
     Create and return the login use case.
@@ -82,4 +97,6 @@ def get_login_user_use_case(
         password_hasher=password_hasher,
         token_generator=token_generator,
         unit_of_work=unit_of_work,
+        refresh_token_repository=refresh_token_repository,
+        refresh_token_hasher=refresh_token_hasher
     )

@@ -14,7 +14,9 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 # Import models so SQLAlchemy registers them
 from app.shared.database.models.user_model import UserModel
-
+from app.auth.infrastructure.persistence.models.refresh_token_model import (
+    RefreshTokenModel,
+)
 from app.shared.config.settings import settings
 from app.shared.database.base import Base
 

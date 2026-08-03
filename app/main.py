@@ -9,8 +9,12 @@ from app.users.presentation.controllers.users_controller import (
     router as users_router,
 )
 
-from app.users.presentation.controllers.auth_controller import (
-    router as auth_router,
+# from app.users.presentation.controllers.auth_controller import (
+#     router as auth_router,
+# )
+
+from app.auth.presentation.routers.auth_router import (
+    router as auth_router
 )
 
 app = FastAPI(

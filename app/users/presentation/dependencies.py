@@ -16,7 +16,7 @@ from app.users.application.use_cases.register_user_use_case import (
     RegisterUserUseCase,
 )
 from app.users.infrastructure.database.repositories.sqlalchemy_user_repository import (
-    SQLAlchemyUserRepository,
+    SqlAlchemyUserRepository,
 )
 from app.users.infrastructure.security.argon2_password_hasher import (
     Argon2PasswordHasher,
@@ -25,12 +25,12 @@ from app.users.infrastructure.security.argon2_password_hasher import (
 
 async def get_user_repository(
     session: AsyncSession = Depends(get_db_session),
-) -> SQLAlchemyUserRepository:
+) -> SqlAlchemyUserRepository:
     """
     Provide the user repository.
     """
 
-    return SQLAlchemyUserRepository(session)
+    return SqlAlchemyUserRepository(session)
 
 
 def get_password_hasher() -> Argon2PasswordHasher:
@@ -42,7 +42,7 @@ def get_password_hasher() -> Argon2PasswordHasher:
 
 
 async def get_register_user_use_case(
-    repository: SQLAlchemyUserRepository = Depends(
+    repository: SqlAlchemyUserRepository = Depends(
         get_user_repository,
     ),
     password_hasher: Argon2PasswordHasher = Depends(
