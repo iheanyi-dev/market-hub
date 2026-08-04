@@ -59,3 +59,28 @@ class StorePersistenceMapper:
             created_at=model.created_at,
             updated_at=model.updated_at,
         )
+
+    @staticmethod
+    def update_model(
+        model: StoreModel,
+        store: Store,
+    ) -> None:
+        """
+        Update an existing StoreModel from a Store aggregate.
+
+        This method copies the mutable state from the domain aggregate
+        to the persistence model. It is intended to be used when an
+        existing store is modified.
+
+        Args:
+            model:
+                Existing persistence model.
+
+            store:
+                Updated Store aggregate.
+        """
+
+        model.name = store.name.value
+        model.description = store.description.value
+        model.updated_at = store.updated_at
+        model.plan = store.plan.code

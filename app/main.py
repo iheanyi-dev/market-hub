@@ -12,9 +12,9 @@ from app.users.presentation.controllers.users_controller import (
     router as users_router,
 )
 
-# from app.users.presentation.controllers.auth_controller import (
-#     router as auth_router,
-# )
+from app.stores.presentation.routers.public_stores_router import (
+    router as public_stores_router,
+)
 
 from app.auth.presentation.routers.auth_router import (
     router as auth_router
@@ -43,6 +43,7 @@ app.include_router(
     prefix="/api/v1"
 )
 app.include_router(owner_stores_router)
+app.include_router(public_stores_router)
 
 @app.get("/")
 async def root():

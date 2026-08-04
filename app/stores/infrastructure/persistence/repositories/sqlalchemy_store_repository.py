@@ -14,6 +14,9 @@ from app.stores.infrastructure.persistence.mappers.store_persistence_mapper impo
 )
 from app.stores.infrastructure.persistence.models.store_model import StoreModel
 from app.users.domain.value_objects.user_id import UserId
+from app.stores.domain.exceptions.store_not_found_error import (
+    StoreNotFoundError
+)
 
 
 class SqlAlchemyStoreRepository(StoreRepository):
@@ -32,25 +35,39 @@ class SqlAlchemyStoreRepository(StoreRepository):
             StorePersistenceMapper.to_model(store)
         )
 
-    async def update(self, store: Store) -> None:
+    async def update(
+    self,
+    store: Store,
+    ) -> None:
         """
-        Persist changes to an existing Store.
+        Persist updates made to an existing store.
+
+        Args:
+            store:
+                Updated Store aggregate.
+
+        Raises:
+            StoreNotFoundError:
+                If the store no longer exists.
         """
-        model = await self._session.get(
-            StoreModel,
-            store.id.value,
+
+        statement = select(StoreModel).where(
+            StoreModel.id == store.id.value,
         )
 
-        if model is None:
-            return
+        result = await self._session.execute(statement)
 
-        model.name = store.name.value
-        model.slug = store.slug.value
-        model.description = store.description.value
-        model.plan = store.plan.code
-        model.product_count = store.product_count
-        model.status = store.status.value
-        model.updated_at = store.updated_at
+        model = result.scalar_one_or_none()
+
+        if model is None:
+            raise StoreNotFoundError()
+
+        StorePersistenceMapper.update_model(
+            model=model,
+            store=store,
+        )
+
+        await self._session.flush()
 
     async def find_by_id(
         self,

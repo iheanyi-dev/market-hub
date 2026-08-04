@@ -261,6 +261,32 @@ class Store:
         """
         self._updated_at = datetime.now(UTC)
 
+    def update(
+    self,
+    *,
+    name: StoreName,
+    description: str | None,
+    ) -> None:
+        """
+        Update the mutable attributes of the store.
+
+        This behavior encapsulates all business rules related to
+        modifying store information. Only mutable attributes may be
+        updated.
+
+        Args:
+            name:
+                The new store name.
+
+            description:
+                The new store description.
+        """
+
+        self._name = name
+        self._description = description
+
+        self._touch()
+
     def __repr__(self) -> str:
         """
         Return a developer-friendly representation.
@@ -275,3 +301,4 @@ class Store:
             f"product_count={self._product_count}"
             f")"
         )
+    

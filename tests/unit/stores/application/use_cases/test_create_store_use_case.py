@@ -59,7 +59,7 @@ def command() -> CreateStoreCommand:
     Valid command used by multiple tests.
     """
     return CreateStoreCommand(
-        owner_id= UserId.create(),
+        user_id= UserId.create(),
         name="My Store",
         slug="my-store",
         description="My first store.",

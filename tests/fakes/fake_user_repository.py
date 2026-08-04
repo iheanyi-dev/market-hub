@@ -7,7 +7,7 @@ This in-memory repository is used for unit testing application use cases.
 from app.users.application.ports.user_repository import UserRepository
 from app.users.domain.entities.user import User
 from app.users.domain.value_objects.email import Email
-
+from uuid import UUID
 
 class FakeUserRepository(UserRepository):
     """
@@ -41,3 +41,14 @@ class FakeUserRepository(UserRepository):
                 return user
 
         return None
+
+    async def get_by_id(self, id: UUID) -> User | None:
+        """
+        Retrieve a user by email.
+        """
+        for user in self._users:
+            if user.id == id:
+                return user
+
+        return None
+

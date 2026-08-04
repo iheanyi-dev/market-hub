@@ -36,6 +36,31 @@ from app.stores.presentation.schemas.get_my_store_response import (
 )
 from app.users.domain.entities.user import User
 
+from app.stores.application.dto.update_my_store_command import (
+    UpdateMyStoreCommand,
+)
+from app.stores.application.use_cases.update_my_store_use_case import (
+    UpdateMyStoreUseCase,
+)
+from app.stores.presentation.dependencies.update_my_store_use_case import (
+    get_update_my_store_use_case,
+)
+from app.stores.presentation.schemas.update_my_store_request import (
+    UpdateMyStoreRequest,
+)
+from app.stores.application.dto.change_store_plan_command import (
+    ChangeStorePlanCommand,
+)
+from app.stores.application.use_cases.change_store_plan_use_case import (
+    ChangeStorePlanUseCase,
+)
+from app.stores.presentation.dependencies.change_store_plan_use_case import (
+    get_change_store_plan_use_case,
+)
+from app.stores.presentation.schemas.change_store_plan_request import (
+    ChangeStorePlanRequest,
+)
+
 router = APIRouter(
     prefix="/stores",
     tags=["Stores"],
@@ -113,5 +138,58 @@ async def get_my_store(
         The authenticated user's store.
     """
     result = await use_case.execute(current_user.id)
+
+    return GetMyStoreResponse.model_validate(result)
+
+@router.patch(
+    "/me",
+    response_model=GetMyStoreResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def update_my_store(
+    request: UpdateMyStoreRequest,
+    current_user: User = Depends(get_current_user),
+    use_case: UpdateMyStoreUseCase = Depends(
+        get_update_my_store_use_case,
+    ),
+) -> GetMyStoreResponse:
+    """
+    Update the authenticated user's store.
+
+    Only mutable store attributes can be modified.
+    """
+
+    result = await use_case.execute(
+        UpdateMyStoreCommand(
+            owner_id=current_user.id,
+            name=request.name,
+            description=request.description,
+        ),
+    )
+
+    return GetMyStoreResponse.model_validate(result)
+
+@router.patch(
+    "/me/plan",
+    response_model=GetMyStoreResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def change_store_plan(
+    request: ChangeStorePlanRequest,
+    current_user: User = Depends(get_current_user),
+    use_case: ChangeStorePlanUseCase = Depends(
+        get_change_store_plan_use_case,
+    ),
+) -> GetMyStoreResponse:
+    """
+    Change the authenticated user's store subscription plan.
+    """
+
+    result = await use_case.execute(
+        ChangeStorePlanCommand(
+            owner_id=current_user.id,
+            plan=request.plan,
+        ),
+    )
 
     return GetMyStoreResponse.model_validate(result)
