@@ -19,7 +19,7 @@ from fastapi import (
     Response,
     status,
 )
-from fastapi.responses import Response
+#from fastapi.responses import Response
 
 from app.auth.application.use_cases.logout_use_case import (
     LogoutUseCase,
@@ -105,7 +105,7 @@ async def login(
         secure=not settings.DEBUG,
         samesite="lax",
         max_age=settings.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60,
-        path="/auth/refresh",
+        path="/api/v1/auth",
     )
 
     #
@@ -156,7 +156,7 @@ async def refresh_token(
         secure=not settings.DEBUG,
         samesite="lax",
         max_age=settings.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60,
-        path="/auth/refresh",
+        path="/api/v1/auth",
     )
 
     return RefreshTokenResponse(
@@ -193,7 +193,7 @@ async def logout(
         )
     response.delete_cookie(
         key="refresh_token",
-        path="/auth/refresh",
+        path="api/v1/auth",
     )
 
     response.status_code = status.HTTP_204_NO_CONTENT

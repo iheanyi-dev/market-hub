@@ -81,7 +81,7 @@ async def test_update_my_store_success(
     assert body["name"] == "Updated Store"
     assert body["slug"] == "my-store"
     assert body["description"] == "New description"
-    assert body["plan"] == "starter"
+    assert body["plan"] == "Starter"
     assert body["product_count"] == 0
 
 

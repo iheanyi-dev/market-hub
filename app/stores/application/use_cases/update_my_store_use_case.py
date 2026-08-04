@@ -23,7 +23,7 @@ from app.stores.domain.repositories.store_repository import (
     StoreRepository,
 )
 from app.stores.domain.value_objects.store_name import StoreName
-
+from app.stores.domain.value_objects.store_description import StoreDescription
 
 class UpdateMyStoreUseCase:
     """
@@ -77,7 +77,7 @@ class UpdateMyStoreUseCase:
 
         store.update(
             name=StoreName.create(command.name),
-            description=command.description,
+            description=StoreDescription.create(command.description),
         )
 
         await self._store_repository.update(store)

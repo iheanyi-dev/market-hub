@@ -3,7 +3,6 @@ Unit tests for the RegisterUserUseCase.
 """
 
 import pytest
-
 from app.users.application.dto.register_user_command import RegisterUserCommand
 from app.users.application.exceptions.email_already_exists_error import (
     EmailAlreadyExistsError,
@@ -13,6 +12,7 @@ from app.users.application.use_cases.register_user_use_case import (
 )
 from tests.fakes.fake_password_hasher import FakePasswordHasher
 from uuid import UUID
+
 
 class TestRegisterUserUseCase:
     """

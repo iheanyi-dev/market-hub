@@ -4,13 +4,13 @@ from app.stores.domain.value_objects.store_name import StoreName
 
 
 def test_create_valid_store_name() -> None:
-    name = StoreName("My Store")
+    name = StoreName.create("My Store")
 
     assert name.value == "My Store"
 
 
 def test_store_name_is_trimmed() -> None:
-    name = StoreName("  My Store  ")
+    name = StoreName.create("  My Store  ")
 
     assert name.value == "My Store"
 
@@ -24,14 +24,14 @@ def test_store_name_is_trimmed() -> None:
 )
 def test_empty_store_name_raises(value: str) -> None:
     with pytest.raises(ValueError):
-        StoreName(value)
+        StoreName.create(value)
 
 
 def test_store_name_too_short_raises() -> None:
     with pytest.raises(ValueError):
-        StoreName("ab")
+        StoreName.create("ab")
 
 
 def test_store_name_too_long_raises() -> None:
     with pytest.raises(ValueError):
-        StoreName("a" * 101)
+        StoreName.create("a" * 101)

@@ -21,6 +21,7 @@ from jwt import ExpiredSignatureError, InvalidTokenError
 
 from app.shared.application.ports.token_generator import TokenGenerator
 from app.shared.config.settings import settings
+from uuid import uuid4
 from datetime import UTC, datetime, timedelta
 
 class JwtTokenGenerator(TokenGenerator):
@@ -130,6 +131,7 @@ class JwtTokenGenerator(TokenGenerator):
             "sub": subject,
             "exp": expires_at,
             "type": "refresh",
+            "jti": str(uuid4())
         }
 
         token = jwt.encode(

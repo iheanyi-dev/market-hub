@@ -43,8 +43,6 @@ async def login_user(
         password=request.password,
     )
 
-    print(command)
-
     result = await use_case.execute(command)
 
     return LoginUserResponse(

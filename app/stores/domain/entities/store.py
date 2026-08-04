@@ -265,7 +265,7 @@ class Store:
     self,
     *,
     name: StoreName,
-    description: str | None,
+    description: StoreDescription | None,
     ) -> None:
         """
         Update the mutable attributes of the store.

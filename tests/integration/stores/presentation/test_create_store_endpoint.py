@@ -74,7 +74,7 @@ async def test_create_store_success(
 
     assert body["name"] == "My Store"
     assert body["slug"] == "my-store"
-    assert body["plan"] == "starter"
+    assert body["plan"] == "Starter"
 
 
 @pytest.mark.asyncio

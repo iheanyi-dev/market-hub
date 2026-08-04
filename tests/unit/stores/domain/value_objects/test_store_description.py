@@ -4,23 +4,23 @@ from app.stores.domain.value_objects.store_description import StoreDescription
 
 
 def test_create_valid_description() -> None:
-    description = StoreDescription("My awesome store.")
+    description = StoreDescription.create("My awesome store.")
 
     assert description.value == "My awesome store."
 
 
 def test_description_is_trimmed() -> None:
-    description = StoreDescription("  Hello  ")
+    description = StoreDescription.create("  Hello  ")
 
     assert description.value == "Hello"
 
 
 def test_empty_description_is_allowed() -> None:
-    description = StoreDescription("")
+    description = StoreDescription.create("")
 
     assert description.value == ""
 
 
 def test_description_too_long_raises() -> None:
     with pytest.raises(ValueError):
-        StoreDescription("a" * 1001)
+        StoreDescription.create("a" * 1001)

@@ -17,8 +17,8 @@ from app.users.domain.value_objects.full_name import FullName
 from app.users.infrastructure.database.repositories.sqlalchemy_user_repository import (
     SqlAlchemyUserRepository,
 )
-from app.shared.infrastructure.security.jwt_token_generator import (
-    JwtTokenGenerator
+from app.users.infrastructure.security.argon2_password_hasher import (
+    Argon2PasswordHasher
 )
 
 
@@ -36,54 +36,33 @@ async def test_refresh_token_returns_new_tokens(
     user_repository = SqlAlchemyUserRepository(db_session)
     refresh_repository = SqlAlchemyRefreshTokenRepository(db_session)
 
-    hasher = JwtTokenGenerator()
-    password_hash = JwtTokenGenerator.
+    hasher = Argon2PasswordHasher()
+    password_hash = hasher.hash("Hashed@password123")
     user = User.create(
         full_name=FullName.create("John Doe"),
         email=Email.create("refresh@example.com"),
-        password_hash="Hashed@password123",
+        password_hash=password_hash,
     )
 
     await user_repository.save(user)
 
-    details = await async_client.post(
+    login = await async_client.post(
         "/api/v1/auth/login",
         json={
             "email": "refresh@example.com",
             "password": "Hashed@password123"
-        },
+        }
     )
 
-    response = await async_client.post(
-            "/api/v1/auth/refresh",
-            headers={
-                "Cookie": details.cookies,
-            },
-        )
+    assert login.status_code == 200
+    assert "refresh_token" in async_client.cookies
 
-
-    # await user_repository.save(user)
-
-    refresh_token = RefreshToken.create(
-        user_id=user.id.value,
-        token_hash="hashed_refresh_token",
-        expires_at=datetime.now(UTC) + timedelta(days=7),
+    refresh = await async_client.post(
+        "/api/v1/auth/refresh",
     )
+   
+    assert refresh.status_code == 200
 
-    # await refresh_repository.save(refresh_token)
-
-    # # Act
-    # response = await async_client.post(
-    #     "/api/v1/auth/refresh",
-    #     json={
-    #         "refresh_token": "refresh_token",
-    #     },
-    # )
-
-    # Assert
-    assert response.status_code == 200
-
-    body = response.json()
+    body = refresh.json()
 
     assert "access_token" in body
-    #assert "refresh_token" in body

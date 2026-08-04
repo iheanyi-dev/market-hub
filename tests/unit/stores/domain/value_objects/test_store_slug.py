@@ -4,13 +4,13 @@ from app.stores.domain.value_objects.store_slug import StoreSlug
 
 
 def test_create_valid_slug() -> None:
-    slug = StoreSlug("my-store")
+    slug = StoreSlug.create("my-store")
 
     assert slug.value == "my-store"
 
 
 def test_slug_is_normalized() -> None:
-    slug = StoreSlug("  My-Store ")
+    slug = StoreSlug.create("  My-Store ")
 
     assert slug.value == "my-store"
 
@@ -29,4 +29,4 @@ def test_slug_is_normalized() -> None:
 )
 def test_invalid_slug_raises(slug: str) -> None:
     with pytest.raises(ValueError):
-        StoreSlug(slug)
+        StoreSlug.create(slug)
