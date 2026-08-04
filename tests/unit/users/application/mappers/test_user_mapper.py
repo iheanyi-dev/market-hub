@@ -25,7 +25,7 @@ class TestUserMapper:
 
         result = UserMapper.to_register_result(user)
 
-        assert result.id == str(user.id)
+        assert result.id == user.id.value
         assert result.full_name == "John Doe"
         assert result.email == "john@example.com"
         assert result.role == "customer"

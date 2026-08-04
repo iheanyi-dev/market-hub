@@ -44,7 +44,7 @@ class TestRegisterUserUseCase:
 
         assert result.full_name == "John Doe"
         assert result.email == "john@example.com"
-        assert UUID(result.id)
+        assert UUID(str(result.id))
 
     @pytest.mark.asyncio
     async def test_duplicate_email_raises_exception(

@@ -29,7 +29,7 @@ class UserMapper:
             A RegisterUserResult DTO.
         """
         return RegisterUserResult(
-            id=str(user.id),
+            id= user.id.value,
             full_name=user.full_name.value,
             email=user.email.value,
             role=user.role.value,
