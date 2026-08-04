@@ -17,6 +17,10 @@ from app.shared.database.models.user_model import UserModel
 from app.auth.infrastructure.persistence.models.refresh_token_model import (
     RefreshTokenModel,
 )
+from app.stores.infrastructure.persistence.models.store_model import (
+    StoreModel
+)
+
 from app.shared.config.settings import settings
 from app.shared.database.base import Base
 

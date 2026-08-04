@@ -140,3 +140,44 @@ from app.users.application.use_cases.register_user_use_case import RegisterUserU
 #     ) as client:
 #         yield client
 
+"""
+Shared pytest fixtures.
+
+Contains reusable fixtures for integration tests.
+"""
+
+from app.shared.infrastructure.security.jwt_token_generator import (
+    JwtTokenGenerator
+)
+
+
+@pytest.fixture
+def auth_headers() -> callable:
+    """
+    Generate Authorization headers for authenticated requests.
+
+    This fixture creates a valid access token and returns
+    the HTTP Authorization header required by protected endpoints.
+    """
+
+    def create_headers(user) -> dict[str, str]:
+        """
+        Create bearer token headers for a user.
+
+        Args:
+            user:
+                Authenticated domain user.
+
+        Returns:
+            Authorization headers.
+        """
+
+        token = JwtTokenGenerator().generate_access_token(
+            subject=str(user.id),
+        )
+
+        return {
+            "Authorization": f"Bearer {token}",
+        }
+
+    return create_headers
