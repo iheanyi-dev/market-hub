@@ -11,6 +11,7 @@ from app.users.application.use_cases.register_user_use_case import (
     RegisterUserUseCase,
 )
 from tests.fakes.fake_password_hasher import FakePasswordHasher
+from tests.fakes.fake_unit_of_work import FakeUnitOfWork
 from uuid import UUID
 
 
@@ -30,6 +31,7 @@ class TestRegisterUserUseCase:
         use_case = RegisterUserUseCase(
             repository=user_repository,
             password_hasher=FakePasswordHasher(),
+            unit_of_work=FakeUnitOfWork()
         )
 
         command = RegisterUserCommand(
@@ -55,6 +57,7 @@ class TestRegisterUserUseCase:
         use_case = RegisterUserUseCase(
             repository=user_repository,
             password_hasher=FakePasswordHasher(),
+            unit_of_work=FakeUnitOfWork()
         )
 
         command = RegisterUserCommand(
